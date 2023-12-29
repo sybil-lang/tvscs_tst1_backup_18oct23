@@ -1,0 +1,36 @@
+<?php
+namespace Custom\Widgets\input;
+
+use \RightNow\Connect\v1_3 as Connect,
+    \RightNow\Connect\Knowledge\v1 as KnowledgeFoundation,
+    \RightNow\Utils\Connect as ConnectUtil,
+    \RightNow\Api,
+    \RightNow\Internal\Sql\Incident as Sql,
+    \RightNow\Libraries\Hooks,
+    \RightNow\Utils\Framework,
+    \RightNow\Utils\Text,
+    \RightNow\ActionCapture,
+    \RightNow\Utils\Config;
+
+class employeeDataDisplay extends \RightNow\Widgets\DataDisplay {
+    function __construct($attrs) {
+        parent::__construct($attrs);
+    }
+
+    function getData() {
+		//print_r($this->data); exit;
+        $data = parent::getData();
+	//	print_r($this->data);
+	//	$this->data['value'] = 
+		
+		$id  = \RightNow\Utils\Url::getParameter('di_id');
+		if ($id) {
+			$CI=&get_instance();
+           // $result = $CI->model('incident')->get($id)->result;
+			$incidents = \RightNow\Utils\Connect::getObjectInstance('Incident',$id);
+			$incidents->Threads = new \Connect\ThreadArray();
+			$this->data['value'] = $incidents->Threads;
+        }
+		return $data;
+    }
+}

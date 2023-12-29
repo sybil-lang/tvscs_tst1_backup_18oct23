@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+		<script type="text/javascript">
+			var getParams = function (url) {
+			var params = {};
+			var parser = document.createElement('a');
+			parser.href = url;
+			var query = parser.search.substring(1);
+			var vars = query.split('&');
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split('=');
+				params[pair[0]] = decodeURIComponent(pair[1]);
+			}
+			return params;
+		};
+		    // console.log(getParams(window.location.href)["function_name"]);
+		    // console.log(getParams(window.location.href)["dealer_code"]);
+
+		    var dealer_code = getParams(window.location.href)["dealer_code"];
+
+		    var current_datetime = new Date();
+			var end_date = current_datetime.getDate() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getFullYear();
+			var start_date = current_datetime.getDate() + "/" + (current_datetime.getMonth()) + "/" + current_datetime.getFullYear();
+			// console.log("Start Date: "+start_date+" and End Date: "+end_date);
+			window.onload = function() {
+				
+				switch(getParams(window.location.href)["function_name"]){
+					case "SalesDisbursedCount":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getSalesDisbursedCount");
+					break;
+
+					case "SalesDisbursalDetails":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getSalesDisbursedDetails");
+					break;
+
+					case "SalesPerformanceSummary":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getSalesPerformanceSummary");
+					break;
+
+					case "SalesPerformanceDetails":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getSalesPerformanceDetails");
+					break;
+
+					case "PDDAgeingSummary":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getPDDAgeingSummary");
+					break;
+
+					case "PDDAgeingDetails":
+					window.location.replace("https://tvscscrm.tvscredit.com/tvscrmlosws/rest/GetTVSDetails/giveOutputAsHtml?startDate="+start_date+"&endDate="+end_date+"&dealerCode="+dealer_code+"&methodName=getPDDAgeingDetails");
+					break;
+
+					default:
+					break;
+				} 
+			    
+			}
+		</script>
+</body>
+</html>

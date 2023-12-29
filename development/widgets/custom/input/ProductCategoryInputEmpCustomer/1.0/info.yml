@@ -1,0 +1,26 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+  yui:
+  - panel
+  - overlay
+  - gallery-treeview
+  - RightNowTreeView
+  - RightNowTreeViewDialog
+  - RightNowTreeViewDropdown
+attributes:
+  report_id:
+    name: report_id
+    type: string
+    description: Report ID which will populate all Categories
+    default: ""
+    required: true
+extends:
+  widget: standard/input/ProductCategoryInput
+  components:
+  - php
+  - view
+  - js
+  - css

@@ -1,0 +1,53 @@
+<html>
+	<head></head>
+	<body>
+			<form name='data'>
+			    <textarea name='ta' cols=40 rows=8></textarea>
+			</form>
+		<input type='button' value='Populate' onclick='populate()' />
+		<script type="text/javascript">
+     	function populate(){
+     		var c = window.external.Contact;
+     		alert(c.CTypeID);
+     	}
+	    function onbeforesave()
+	    {
+	        var c = window.external.Contact;
+	        var msg = "";
+
+	        if (c == null)
+	            alert("null contact");
+	        	
+	        if(c.PhOffice != null){
+	        	msg = c.PhOffice;
+	        }
+	        if(c.PhMobile != null){
+	        	msg = c.PhMobile;
+	        }
+	        if(c.PhHome!= null){
+	        	msg = c.PhHome;
+	        }
+	        if(c.PhAsst!=null){
+	        	msg = c.PhAsst;
+	        }
+	        if(c.PhFax!=null){
+	        	msg = c.PhFax;
+	        }
+	        var isNumberOnly = /^\d+$/.test(msg);
+	        var success;
+	        if(msg.length>10 || msg.length<10 || msg.charAt(0)=='0' || (isNumberOnly==false)){
+	        	 success = confirm("Contact Number is Incorrect or not Present! Do you Still want to Save?");
+	        	if(success)
+	        	{
+	        		window.external.beforesavecomplete(success,"Save Success!");
+	        	}
+	        	else{	        		
+	        		window.external.beforesavecomplete(success,"Invalid Phone Number!");
+	        	}
+	        }
+
+	    }
+</script>
+
+	</body>
+</html>

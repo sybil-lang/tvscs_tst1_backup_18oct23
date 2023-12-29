@@ -1,0 +1,90 @@
+ <?php
+$CI=&get_instance();
+$CI->load->helper('report');
+checkCustomerType('internal employee');
+ ?>
+ <html>
+ <head></head>
+ <style type="text/css">
+ div.dataTables_wrapper {
+        width: 100%;
+        margin: 0 auto;
+    }
+	
+	</style>
+
+ <body>
+ <?php
+ //$agreement = \RightNow\Utils\Url::getParameter('ag_id');
+$userProfile = $CI->session->getSessionData('userProfile');
+$agreement = $userProfile['agg_no'];
+?>
+ <script type="text/javascript">
+$('#lschedule').DataTable( {
+					 "scrollX": true,
+					  dom: 'Bfrtip',
+						buttons: [
+						{
+							extend: 'excelHtml5',
+							title: 'Loan Schedule Details'
+						},
+						{
+							extend: 'pdfHtml5',
+							title: 'Loan Schedule Details',
+							orientation: 'landscape',
+							pageSize: 'LEGAL'
+						},
+						{
+							extend: 'csvHtml5',
+							title: 'Loan Schedule Details'
+						}
+					],
+			//		 "responsive":true,
+					"ajax": {
+								"url": "/cc/AjaxCustom/rest_api_call",
+								"dataSrc": "",
+								"data": {
+										method: 'getLoanScheduleDetails',
+										ag_no: '<?php echo $agreement ;?>',
+								}
+							},
+					"columns": [
+						{ "data": "INSURANCE_AMOUNT" },
+						{ "data": "INSTALLMENT_STATUS" },
+						{ "data": "PRINCIPLE_AMOUNT" },
+						{ "data": "EMI" },
+						{ "data": "INSTALLMENT_NO" },
+						{ "data": "INSURANCE_AMOUNT_PAID" },
+						{ "data": "INTEREST_AMOUNT_PAID" },
+						{ "data": "OVER_DUE_INTEREST_AMOUNT" },
+						{ "data": "INTEREST_AMOUNT" },
+						{ "data": "INTALLMENT_DUE_DATE" },
+						{"data" : "INSURANCE_AMOUNT_WAIVED"},
+						{ "data": "PRINCLIPLE_AMOUNT_PAID" },
+						{ "data" : "OVER_DUE_PRINCIPLE_AMOUNT"	}
+						],
+						"bDestroy": true
+					} );
+ </script>
+<table id="lschedule" class="table display table-bordered  nowrap" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Insurance Amount</th>
+				<th>Installment Status</th>
+				<th>Principle Amount</th>
+				<th>EMI</th>
+				<th>Installment No.</th>
+				<th>Insurance Amount Paid</th>
+				<th>Interest Amount Paid</th>
+				<th>Over Due Interest Amount</th>
+				<th>Interest Amount</th>
+				<th>Installment Due Date</th>
+				<th>Insurance Amount Waived</th>
+				<th>Principle Amount Paid</th>
+				<th>Over Due Principle Amount</th>
+            </tr>
+        </thead>
+        
+    </table>
+ </body>
+ </html>

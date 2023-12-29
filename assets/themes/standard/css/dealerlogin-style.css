@@ -1,0 +1,60 @@
+.customer_loginimg figure {
+    text-align: center;
+    width: auto;
+    margin: 0 auto;
+}
+
+.customer-service-info .search input {
+    background-color: #f3f3f3;
+    height: 40px;
+    box-shadow: none;
+}
+
+.forgot-password {
+    color: #114984;
+    margin: -10px 10px 5px;
+    font-weight: 600;
+    display: block;
+    font-family: Montserrat, sans-serif;
+}
+.dealer_log .note h3 {
+    font-size: 14px;
+    margin: 4px;
+}
+
+.registration{
+	font-weight: 400;
+    display: inline-block;
+	text-transform: none;
+}
+.registration .forgot-password{
+	margin: 0 5px;
+    display: inline-block;
+}
+
+.employee_log .customer_loginimg {
+    margin-top: 130px;
+}
+
+.custom_log.employee_log{
+	padding:0;
+}
+
+.employee_log .note li:before{
+	display:none;
+}
+.employee_log .steps_login {
+    padding: 16px 10px;
+}
+
+.nav-menu.primary-menu .social-statuses a.active, .nav-menu.primary-menu .social-statuses a:hover {
+    padding: 0 5px;
+}
+
+.social-statuses a {
+    padding: 0px 5px;
+}
+
+.dealerlogin_img{
+	margin-top: 20px;
+}

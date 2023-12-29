@@ -1,0 +1,4 @@
+<? /* Overriding FormInput's view */ ?>
+<div id="rn_<?= $this->instanceID ?>" class="<?= $this->classList ?>">
+empFormInput
+</div>

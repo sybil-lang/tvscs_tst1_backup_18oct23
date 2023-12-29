@@ -1,0 +1,13 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+attributes:
+  your_condition:
+    name: your_condition
+    type: string
+    description: Add any value to this attribute and then later in the code use it
+      to apply conditions, if you want.
+    default: ""
+    required: false

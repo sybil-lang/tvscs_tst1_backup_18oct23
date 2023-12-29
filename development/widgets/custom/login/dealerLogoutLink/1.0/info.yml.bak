@@ -1,0 +1,27 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+attributes:
+  logout_ajax:
+    name: logout_ajax
+    type: ajax
+    description: End point for making the logout Ajax request to
+    default: /ci/ajax/widget
+    required: false
+  label:
+    name: label
+    type: string
+    description: Label to display on link
+    default: Logout
+    required: false
+  redirect_url:
+    name: redirect_url
+    type: string
+    description: Page to which to redirect after log-out. This attribute does not
+      have any affect if the user logs in using PTA. Instead they will be redirected
+      to the value of the PTA_EXTERNAL_LOGOUT_SCRIPT_URL config. Default is the value
+      of the CP_HOME_URL config setting.
+    default: /app/dealer/login
+    required: false

@@ -1,0 +1,4 @@
+<? /* Overriding DataDisplay's view */ ?>
+<div id="rn_<?= $this->instanceID ?>" class="<?= $this->classList ?>">
+employeeDataDisplay
+</div>

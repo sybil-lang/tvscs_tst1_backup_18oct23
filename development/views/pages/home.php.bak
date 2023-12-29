@@ -1,0 +1,44 @@
+<rn:meta title="#rn:msg:SHP_TITLE_HDG#" template="standard.php" clickstream="home"/>
+<?php
+
+$msg = \RightNow\Connect\v1_3\MessageBase::fetch( CUSTOM_MSG_TVS_API_URL );
+$url = $msg->Value;
+$msg=RightNow\Connect\v1_3\MessageBase::fetch(CUSTOM_MSG_SEND_OTP_URL);
+	echo $url1=$msg->Value;
+?>
+
+<div class="rn_PageContent rn_Home home-image">
+    <div class="rn_Container">
+			 <div class="rn_StandardLogin">
+			
+			<rn:widget path="custom/login/LoginOtp/" redirect_url="/app/customer/dashboard" disable_password ="true" initial_focus="true"/><br/>
+		<rn:condition logged_in="false">
+			<!--<p><a href="/app/#rn:config:CP_ACCOUNT_ASSIST_URL##rn:session#">#rn:msg:FORGOT_YOUR_USERNAME_OR_PASSWORD_MSG#</a></p>-->
+		</rn:condition>
+			
+		</div>
+    </div>
+
+    <!--<div class="rn_PopularKB">
+        <div class="rn_Container">
+            <h2>#rn:msg:POPULAR_PUBLISHED_ANSWERS_LBL#</h2>
+            <rn:widget path="reports/TopAnswers" show_excerpt="true" limit="5"/>
+            <a class="rn_AnswersLink" href="/app/answers/list#rn:session#">#rn:msg:SHOW_MORE_PUBLISHED_ANSWERS_LBL#</a>
+        </div>
+    </div>-->
+
+   <!-- <div class="rn_PopularSocial">
+        <div class="rn_Container">
+            <h2>#rn:msg:RECENT_COMMUNITY_DISCUSSIONS_LBL#</h2>
+            <rn:widget path="discussion/RecentlyAnsweredQuestions" show_excerpt="true" maximum_questions="5"/>
+            <a class="rn_DiscussionsLink" href="/app/social/questions/list/kw/*#rn:session#">#rn:msg:SHOW_MORE_COMMUNITY_DISCUSSIONS_LBL#</a>
+        </div>
+    </div>-->
+	<div class="row pos_home">
+		 <div class="rn_Container">
+			<div class="col-md-4"><a href="<?php echo $site_url;?>/app/newlead"><img class="pull-right" src="/euf/assets/themes/standard/images/loan-approval.jpg"></a></div>
+			<div class="col-md-4"><a href="<?php echo $site_url;?>/app/dealerlocator"><img src="/euf/assets/themes/standard/images/find_dealers-banner.jpg" ></a></div>
+			<div class="col-md-4"><a href="<?php echo $site_url;?>/app/emicalculator"><img src="/euf/assets/themes/standard/images/emi-calc.jpg" ></a></div>
+		</div>
+	</div>
+</div>

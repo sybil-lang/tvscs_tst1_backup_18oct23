@@ -1,0 +1,24 @@
+<?php
+		
+		// if($_POST['action']) {
+	
+	print_r($_POST);
+		// $ch = curl_init($_POST['url']);
+		// curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+	
+		// $result = curl_exec($ch);
+		// $data_decode=json_decode($result);
+		// echo "<br><pre>";
+		// print_r($data_decode);
+		// echo "</pre><br>";
+		// $curlerror = curl_error($ch);
+		// if($curlerror){
+		// 	echo "<br>CURL Error:".$curlerror;
+		// }
+
+		// curl_close($ch); 
+	// }
+
+?>

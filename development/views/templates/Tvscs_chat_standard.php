@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="#rn:language_code#">
+<rn:meta javascript_module="standard"/>
+<head>
+	<meta charset="utf-8"/>
+	<title>
+		<rn:page_title/>
+	</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<!--[if lt IE 9]><script src="/euf/core/static/html5.js"></script><![endif]-->
+	<rn:widget path="search/BrowserSearchPlugin" pages="home, answers/list, answers/detail"/>
+	<rn:theme path="/euf/assets/themes/standard" css="site.css"/>
+	<link rel="stylesheet" href="/euf/assets/themes/standard/css/font-awesome.min.css">
+	<script type="text/javascript" src="/euf/assets/themes/standard/js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/euf/assets/themes/standard/js/bootstrap.js"></script>
+
+	<rn:head_content/>
+	<link rel="icon" href="/euf/assets/images/favicon.png" type="image/png"/>	
+	<rn:widget path="utils/AdvancedSecurityHeaders"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet"/>
+	<link rel="stylesheet" href="/euf/assets/themes/standard/css/custom-style.css"/>
+	<script type="text/javascript" src="/euf/assets/themes/standard/js/bootbox.min.js"></script>
+
+	<style type="text/css">
+		.in{background:none !important;}
+	</style>
+
+</head>
+<?php
+$CI=&get_instance();
+$CI->load->helper('report');
+
+//$bundle=$CI->session->getSessionData("previouslySeenEmail");
+$userProfile=$CI->session->getSessionData("userProfile");
+$msg=RightNow\Connect\v1_3\MessageBase::fetch(CUSTOM_MSG_LOAN_NOTIFICATIONS);
+$report_id=$msg->Value;
+ $contact_id=$CI->session->getProfileData("c_id");
+//$contact_id=$bundle['sess_contact_id'];
+//$filter=array('Contact ID'=>7);
+$filter = array('Contact ID' => $contact_id);
+$notifications_count = 0;
+if(strlen($contact_id)){
+	$notificationResponse = report_result($report_id,$filter);
+}
+//print_r($notificationResponse);
+$notifications_count = count($notificationResponse);
+//echo "<h2>Notifications Details</h2><br><br>";
+$notification_text = '';
+$notification_counter = 0;
+if($notifications_count > 0 ){
+		for($i = 0; $i < $notifications_count && $i <=10; $i++) {
+
+				if(!empty($notificationResponse[$i]['Bounce Date'])){
+						if(strtolower($notificationResponse[$i]['Bounce Notification Read']) !='yes'){
+							$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+													  
+													   <div class="notification-item">
+														<h4 class="item-title">Your Bounce Date is '.($notificationResponse[$i]['Bounce Date']).'</h4>
+														<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+													  </div>
+													   
+													</a>';
+								$notification_counter +=1;
+						}else{
+							$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+													  
+													   <div class="notification-item-read">
+														<h4 class="item-title">Your Bounce Date is '.($notificationResponse[$i]['Bounce Date']).'</h4>
+														<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+													  </div>
+													   
+													</a>';
+					}
+				}
+
+			if(!empty($notificationResponse[$i]['Insurance Renewal Date'])){							
+				if(strtolower($notificationResponse[$i]['Insurance Notification Read']) !='yes'){
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+											  
+											   <div class="notification-item">
+												<h4 class="item-title">Your Insurance Renewal Date is '.($notificationResponse[$i]['Insurance Renewal Date']).'</h4>
+												<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+											  </div>
+											   
+											</a>';
+				$notification_counter +=1;
+				}else{
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+											  
+											   <div class="notification-item-read">
+												<h4 class="item-title">Your Insurance Renewal Date is '.($notificationResponse[$i]['Insurance Renewal Date']).'</h4>
+												<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+											  </div>
+											   
+											</a>';
+				}
+			}
+
+			if(!empty($notificationResponse[$i]['Receipt Date'])){
+				if(strtolower($notificationResponse[$i]['Receipt Notification Read']) !='yes'){
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+												  
+												   <div class="notification-item">
+													<h4 class="item-title">Your Receipt Date is '.($notificationResponse[$i]['Receipt Date']).'</h4>
+													<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+												  </div>
+												   
+												</a>';
+					$notification_counter +=1;
+				}else{
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+												  
+												   <div class="notification-item-read">
+													<h4 class="item-title">Your Receipt Date is '.($notificationResponse[$i]['Receipt Date']).'</h4>
+													<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+												  </div>
+												   
+												</a>';
+				}
+			}
+			if(!empty($notificationResponse[$i]['Presentation Date'])){
+				if(strtolower($notificationResponse[$i]['Presentation Notification Read']) !='yes'){
+
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+											  
+											   <div class="notification-item">
+												<h4 class="item-title">Your Presentation Date is '.($notificationResponse[$i]['Presentation Date']).' </h4>
+												<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+											  </div>
+											   
+											</a>';
+					$notification_counter +=1;
+				}else{
+					$notification_text .= '<a class="content" href="'.$site_url.'/app/customer/selfserviceview/notification/1">
+											  
+											   <div class="notification-item-read">
+												<h4 class="item-title">Your Presentation Date is '.($notificationResponse[$i]['Presentation Date']).' </h4>
+												<p class="item-info">For Agreement No '.$notificationResponse[$i]['Agreement No'].'</p>
+											  </div>
+											   
+											</a>';
+					}
+				}
+			}
+		}
+?>
+<body class="yui-skin-sam yui3-skin-sam" itemscope itemtype="http://schema.org/WebPage">
+	<a href="#rn_MainContent" class="rn_SkipNav rn_ScreenReaderOnly">#rn:msg:SKIP_NAVIGATION_CMD#</a>
+	<!--<div class="container-fluid gray_bg">
+		<div class="container">
+			<div class="row">
+				
+				<div class="col-md-3 col-xs-12 text-xs-center text-md-left"><strong><i class="fa fa-phone-square"></i> 18004253883 </strong> (Toll Free) </div>
+				
+				<div class="col-md-4 col-xs-12 text-center"><a style="color:white;" href="http://www.tvscredit.co.in/aboutus.aspx" target="_blank">ABOUT</a> | <a style="color:white;" href="http://www.tvscredit.co.in/rbi-compliance.aspx" target="_blank">INVESTOR</a> | <a style="color:white;" href="http://www.tvscredit.co.in/career.aspx" target="_blank">CAREER</a>
+				</div>
+
+				<div class="col-md-2">Follow Us <a href="https://www.facebook.com/TVSCREDIT" target="_blank"><i class="fa fa-facebook round facebook"></i></a> <a href="https://twitter.com/TVSCredit" target="_blank"><i class="fa fa-twitter round twitter"></i></a> <a href="https://www.linkedin.com/company-beta/1481214?pathWildcard=1481214" target="_blank"><i class="fa fa-linkedin round linkedin"></i></a>
+				</div>
+				
+				<div class="col-md-2 col-xs-12 text-right">
+					<div class="rn_LoginStatus">
+						<rn:condition logged_in="true">
+
+							<rn:widget path="login/AccountDropdown" subpages="#rn:msg:ACCOUNT_OVERVIEW_LBL# > account/overview, #rn:msg:SUPPORT_HISTORY_LBL# > account/questions/list, #rn:msg:ACCOUNT_SETTINGS_LBL# > account/profile"/>
+
+						</rn:condition>
+					</div>
+
+				</div>
+				<rn:condition logged_in="true">
+					<div class="col-md-1">
+					<div class="dropdowns">
+						  <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+								<div class="notification"></div>
+						</a>
+										<ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+											
+											<div class="notification-heading"><h4 class="menu-title">Notifications</h4><h4 class="menu-title pull-right"><a href="<?php echo $site_url;?>/app/customer/selfserviceview/notification/1">View all</a><i class="glyphicon glyphicon-circle-arrow-right"></i></h4>
+											</div>
+											<li class="divider"></li>
+										   <div class="notifications-wrapper">
+											 <?php echo $notification_text;?>
+
+										   </div>
+											<li class="divider"></li>
+											<div class="notification-footer"><h4 class="menu-title"><a href="<?php echo $site_url;?>/app/customer/selfserviceview/notification/1">View all</a><i class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
+										  </ul>
+								</div>
+					</div>
+					</rn:condition>
+			</div>
+		</div>
+	</div>-->
+	<!--<div class="container martop20 marbtm10">
+		<div class="row">
+
+			
+			<div class="col-md-4 marbtm10 col-xs-12 text-xs-center text-md-left">
+				<a href="<?php echo $site_url;?>/"><img src="images/brand-logo.png"></a>
+			</div>
+			
+			
+			<div class="col-md-3">
+				<div class="rn_ChatLink">
+					<rn:widget path="chat/ConditionalChatLink" min_sessions_avail="1" chat_login_page="/app/chat/chat_launch" label_default="Chat directly with a member of our support team." sub_id="conditionalChat"/>
+				</div>
+			</div>
+			
+
+			
+			<div class="col-md-5 col-xs-12">
+				<div class="rn_SearchControls">
+					<h1 class="rn_ScreenReaderOnly">#rn:msg:SEARCH_CMD#</h1>
+					<form method="get" action="/app/results">
+						<rn:container source_id="KFSearch">
+							<div class="rn_SearchInput">
+								<rn:widget path="searchsource/SourceSearchField" initial_focus="true"/>
+							</div>
+							<rn:widget path="searchsource/SourceSearchButton" search_results_url="/app/results"/>
+						</rn:container>
+					</form>
+				</div>
+			</div>			
+		</div>
+	</div>-->
+	</div>
+	<rn:condition logged_in="true">
+		<?php
+		if($userProfile['cType'] =='Customer'){?>
+		<header>
+
+			<nav>
+				<div class="rn_NavigationBar">
+					<input type="checkbox" id="rn_NavigationMenuButtonToggle" class="rn_ScreenReaderOnly"/>
+					<label class="rn_NavigationMenuButton" for="rn_NavigationMenuButtonToggle"> #rn:msg:MENU_LWR_LBL# </label>
+					<ul class="rn_NavigationMenu">
+						<li>
+							<i class="fa fa-home" aria-hidden="true"></i>
+							<rn:widget path="navigation/NavigationTab" label_tab="Home" link="/app/#rn:config:CP_HOME_URL#" pages="home"/>
+						</li>
+						<li>
+							<i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/customer/dashboard">Dashboard</a>
+						</li>
+						<li>
+							<i class="fa fa-share-alt-square" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/customer/selfserviceview">Self-Service</a>
+						</li>
+						<li>
+							<i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/customer/value-added">Value-Added Services</a>
+						</li>
+						<li>
+							<i class="fa fa-google-wallet" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/customer/wallet">Wallet</a>
+						</li>
+						<li>
+							<i class="fa fa-address-card-o" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/account/profile">Profile</a>
+						</li>
+						<li>
+							<i class="fa fa-question" aria-hidden="true"></i>&nbsp;<rn:widget path="navigation/NavigationTab" label_tab="Ask a Question" link="/app/raisequery" pages="raisequery, ask_confirm"/>
+						</li>
+						<li>
+							<i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/answers/list">FAQ</a>
+						</li>
+						<li>
+							<i class="fa fa-phone"></i>&nbsp;<a href="javascript:void();" data-toggle="modal" data-target="#myModal">Call me Back</a>
+						</li>
+					</ul>
+				</div>
+
+				<!--  <rn:condition hide_on_pages="home, public_profile, results, answers/list, social/questions/list">
+            <div class="rn_SearchBar">
+                <rn:widget path="search/SimpleSearch" report_page_url="/app/results"/>
+            </div>
+        </rn:condition>-->
+			</nav>
+		</header>
+		<?php }elseif(strtolower($userProfile['cType']) == 'dealer'){?>
+				
+				<header>
+
+				<nav>
+					<div class="rn_NavigationBar">
+						<input type="checkbox" id="rn_NavigationMenuButtonToggle" class="rn_ScreenReaderOnly"/>
+						<label class="rn_NavigationMenuButton" for="rn_NavigationMenuButtonToggle"> #rn:msg:MENU_LWR_LBL# </label>
+						<ul class="rn_NavigationMenu">
+							<!--<li>
+								<i class="fa fa-home" aria-hidden="true"></i>
+								<rn:widget path="navigation/NavigationTab" label_tab="#rn:msg:SUPPORT_HOME_TAB_HDG#" link="/app/dealer#rn:config:CP_HOME_URL#" pages="home"/>
+							</li>-->
+							<li>
+								<i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/dashboard">Dashboard</a>
+							</li>
+							<li>
+								<i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/business-information">Business Information</a>
+							</li>
+							<li>
+								<i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/trade-advance">Trade Advance</a>
+							</li>
+							<li>
+								<i class="fa fa-money" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/incentive">Incentives & Claims</a>
+							</li>
+							<li>
+								<i class="fa fa-address-card-o" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/account/overview">Grievance</a>
+							</li>
+							<li>
+								<i class="fa fa-question-circle"></i>
+								<rn:widget path="navigation/NavigationTab" label_tab="#rn:msg:ASK_QUESTION_HDG#" link="/app/dealer/raisequery" pages="raisequery, ask_confirm"/>
+							</li>
+							<li>
+								<i class="fa fa-question-circle-o" aria-hidden="true"></i>&nbsp;<a href="<?php echo $site_url;?>/app/dealer/answers/list">FAQ</a>
+							</li>
+							<!--<li>
+								<i class="icon-envelope"></i> <a href="<?php echo $site_url;?>/app/account/profile">General</a>
+							</li>
+							<li>
+								<i class="icon-question-sign"></i>
+								<rn:widget path="navigation/NavigationTab" label_tab="#rn:msg:ASK_QUESTION_HDG#" link="/app/raisequery" pages="raisequery, ask_confirm"/>
+							</li>
+							<li data-toggle="modal" data-target="#myModal" id="call_back">
+								<i class="icon-phone"></i> Call me Back</li>
+							</li>-->
+						</ul>
+					</div>
+
+					
+				</nav>
+		</header>
+
+		<?php }elseif(strtolower($userProfile['cType']) == 'internal employee'){?>
+
+		<header>
+
+			<nav class="navbar navbar-default">
+				  <div class="container-fluid">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+					  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					  </button>
+					 <!-- <a class="navbar-brand" href="#"></a>-->
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					  <ul class="nav navbar-nav">
+						
+						<li class="dropdown">
+						  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;Dashboard <span class="caret"></span></a>
+						  <ul class="dropdown-menu">
+							<li><a href="<?php echo $site_url;?>/app/employee/dashboard"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Employee Dashboard</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="<?php echo $site_url;?>/app/employee/dealer/questions/list"><i class="fa fa-pie-chart" aria-hidden="true"></i>&nbsp;Dealer Dashboard</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="<?php echo $site_url;?>/app/employee/customer/questions/list"><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;Customer Dashboard</a></li>
+<!--							<li><a href="#">Something else here</a></li>
+							<li><a href="#">Separated link</a></li>-->
+						  </ul>
+						</li>
+						<li>
+					<!--	<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/dealer_dashboard"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Dealer Helpdesk</a>-->
+							<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/dealerquery"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Dealer Helpdesk</a>
+						</li>
+						<li>
+							<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/customer_dashboard"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;Customer Helpdesk</a>
+						</li>
+						<li class="lp-dropdown">
+								<a href="#" class="dropdown-toggle" id="Agent-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Leads <span class="caret"></span></a>
+								<ul class="dropdown-menu" data-dropdown-owner="Agent-dropdown">
+									<li>
+										<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/lead_generation"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Lead generation</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/lead_status"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Lead Status</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a tabindex="-1" href="<?php echo $site_url;?>/app/employee/login_status"><i class="fa fa-lock" aria-hidden="true"></i>&nbsp;Login Status</a>
+									</li>
+								</ul>
+							</li>
+							
+							<li>
+								<a href="<?php echo $site_url;?>/app/employee/account/profile"><i class="fa fa-address-card" aria-hidden="true"></i>&nbsp;Profile</a>
+							</li>
+							<li>
+								<a href="<?php echo $site_url;?>/app/employee/tutorial"><i class="fa fa-hourglass-half" aria-hidden="true"></i>&nbsp;Tutorial</a>
+							</li>
+							<li>
+								<a href="<?php echo $site_url;?>/app/employee/documents"><i class="fa fa-book" aria-hidden="true"></i>&nbsp;Documents</a>
+							</li>
+							<li>
+								<a href="<?php echo $site_url;?>/app/employee/raisequery"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Employee Helpdesk</a>
+							</li>
+							
+					  </ul>
+					  
+
+					</div><!-- /.navbar-collapse -->
+				  </div><!-- /.container-fluid -->
+				</nav>
+		</header>
+		<?php } ?>
+	</rn:condition>
+
+	<rn:widget path="utils/CapabilityDetector"/>
+
+	<div class="rn_Body">
+		<div class="rn_MainColumn" role="main"> <a id="rn_MainContent"></a>
+			<rn:page_content/>
+		</div>
+	</div>
+	<!--<footer class="rn_Footer">
+		<div class="rn_Container">
+			<!--<rn:widget path="search/ProductCategoryList" report_page_url="/app/products/detail"/>
+			<div class="footer-bottom text-center">
+				<div class="container">
+					<div class="pull-center">
+						  <div class="row">
+										<ul>
+											<li><a href="/#">
+											Copyright @ 2016 All rights reserved by TVS Credit Services Limited.
+											</a></li>
+											
+										</ul>
+						  </div>
+									</div>
+						<div class="row">
+						  <div class="col-md-12">
+							<ul>
+							<li><a href="http://www.tvscredit.co.in/termsandcondition.aspx" target="_blank">Terms and Conditions</a> | <a href="http://www.tvscredit.co.in/privacypolicy.aspx" target="_blank">Privacy Policy</a></li>
+											<li><a href="mailto:helpdesk@tvscredit.com">helpdesk@tvscredit.com</a></li>
+							  
+							</ul>
+						  </div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</footer>-->
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">TVS - Call Request</h4>
+				</div>
+			<p id="response_text"></p>
+			<form id="frmcall" name="frmcall" method="post">
+				<div class="modal-body" id="model_body">
+					
+								<div class="form-group">
+									<!--<label for="exampleSelect1">Agreement Number</label>-->
+									<rn:widget path="custom/input/agreementSelect/" name="agreementno" required="true" label_input="Agreement Number"/>
+								  </div>
+							  <div class="form-group">
+								<label for="exampleInputEmail1">Preferred contact no.</label>
+								<input type="number" class="form-control" id="contact_number"  name="contact_number"aria-describedby="Preferred contact no" placeholder="Enter Mobile Number" maxlength="10" required >
+								<small id="emailHelp" class="form-text text-muted">&nbsp;</small>
+							  </div>
+							 
+							  
+							<div class="form-group">
+								<label for="datetimepicker">Preferred Date/Time to speak</label>
+								<div class='input-group date' id='datetimepicker8'>
+									<input type='text' class="form-control" name="datetime_speak" />
+									<span class="input-group-addon">
+										<span class="fa fa-calendar">
+										</span>
+									</span>
+								</div>
+							
+						<script type="text/javascript">
+							$(function () {
+								$('#datetimepicker8').datetimepicker({
+									icons: {
+										time: "fa fa-clock-o",
+										date: "fa fa-calendar",
+										up: "fa fa-arrow-up",
+										down: "fa fa-arrow-down"
+									},
+									minDate : 'now'
+								});
+							});
+						</script>
+					</div>
+
+					<div class="form-group">
+						<label for="exampleTextarea">Assistance required</label>
+						<textarea class="form-control" id="assistance"  name="assistance" rows="3" ></textarea>
+					  </div>
+				</div>
+				<div class="modal-footer" id="modal-button">
+				
+  
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="call_back">Submit</button>
+
+				</div>
+				<div id="after-submit" style="display:none;"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+	<!-- Modal -->
+
+	<!-- script for modal -->
+	<script>
+	var validFlag = false;
+		$( "#call_back" ).click( function () {
+			//alert( "Handler for .click() called." );
+			if($(".rn_agreementSelect").find("select").val() == ""){
+				bootbox.alert("<p>Please select Agreement No</p>");
+				validFlag = true;
+			}else if($('#contact_number').val() == ''){
+				bootbox.alert("<p>Please Enter valid Mobile No</p>");
+				validFlag = true;
+			}else{
+				validFlag = false;
+			}
+
+			if(!validFlag){
+				$( "#response_text" ).html("Logging Request......");
+				$.ajax({
+							url: "/cc/AjaxCustom/create_inc",
+							type: "post",
+							data: $('#frmcall').serialize(),
+							success: function(response) {
+								//alert(d);
+								var obj = jQuery.parseJSON(response);
+								//var html_txt = '<p>Thanks for submitting your Request. Your request is logged and our representative will call you back ASAP! <br />Use this reference number for follow up: <b><a href="/app/account/questions/detail/i_id/'+obj[0].value_id+'">'+obj[0].value_refno+'</a>.</b></p>';
+								//$( "#response_text" ).html( html_txt );
+								//$('#model_body').hide();
+								//$('#modal-button').hide();
+								//$('#after-submit').show();
+								if(obj[0].value_id != ""){
+											window.location.href= '/app/ask_confirm/i_id/'+obj[0].value_id;
+								}
+							}
+				   });
+			}
+		} );
+	</script>
+	<!-- script for modal -->
+<link rel="stylesheet" type="text/css" href="/euf/assets/themes/standard/css/bootstrap-datetimepicker.css">
+
+<script type="text/javascript" src="/euf/assets/themes/standard/js/moment-with-locales.js"></script>
+
+<script type="text/javascript" src="/euf/assets/themes/standard/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+if($('.notification').length){
+	var el = document.querySelector('.notification');
+
+	//document.querySelector('button').addEventListener('click', function(){//
+		var count = Number('<?php echo $notification_counter;?>') || 0;
+		el.setAttribute('data-count', count);
+		el.classList.remove('notify');
+		el.offsetWidth = el.offsetWidth;
+		el.classList.add('notify');
+	//	alert(count);
+		if(count != 0){
+			el.classList.add('show-count');
+		}
+}
+//}, false);
+</script>
+</body>
+
+</html>

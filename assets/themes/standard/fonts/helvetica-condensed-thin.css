@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'HelveticaCondensedThinRegular';
+    src: url('helvetica-condensed-thin.eot');
+    src: url('helvetica-condensed-thin.eot') format('embedded-opentype'),
+         url('helvetica-condensed-thin.woff') format('woff'),
+         url('helvetica-condensed-thin.ttf') format('truetype'),
+         url('helvetica-condensed-thin.svg#HelveticaCondensedThinRegular') format('svg');
+}

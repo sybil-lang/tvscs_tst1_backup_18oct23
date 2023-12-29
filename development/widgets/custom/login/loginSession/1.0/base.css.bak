@@ -1,0 +1,40 @@
+/**
+ * base.css: Base CSS for loginSession
+ */
+.rn_loginSession {
+
+}
+.rn_loginSession label.rn_Hidden{
+    display:none;
+}
+
+.rn_LoginForm .rn_ThirdPartyLogin {
+    float: left;
+    display: block;
+    margin-right: 2.35765%;
+    width: 48.82117%;
+    border-right: 1px solid #999;
+    padding-right: 2em;
+}
+
+.rn_LoginForm  .input{background:#fff; transition:all 800ms; width:247px; border-radius:3px 0 0 3px; font-family: Segoe, Segoe UI, DejaVu Sans, Trebuchet MS, Verdana, ' sans-serif'; border:solid 1px #054fa4; border-right:none; outline:none; color:#000000; height:40px; line-height:40px; display:inline-block; padding-left:10px; font-size:16px}
+.rn_LoginForm  .input,.login span.icon{vertical-align:top}
+.login span.icon{    width: 50px;
+    transition: all 800ms;
+    text-align: center;
+    color: #fff;
+    height: 40px;
+    border-radius: 0 3px 3px 0;
+    background: #054fa4;
+    height: 40px;
+    line-height: 40px;
+    display: inline-block;
+    border: solid 1px #054fa4;
+    border-left: none;
+    font-size: 16px;}
+.rn_LoginForm  .input:focus:invalid{border-color:red}
+.rn_LoginForm  .input:focus:invalid+.icon{border-color:red}
+.rn_LoginForm  .input:focus:valid{border-color:green}
+.rn_LoginForm  .input:focus:valid+.icon{border-color:green}
+#check,#check1{top:1px; position:relative}
+.rn_LoginForm  .btn{border:none; outline:none; background:#ff8a00; border-bottom:solid 4px #ff8a00; font-family: Segoe, Segoe UI, DejaVu Sans, Trebuchet MS, Verdana, ' sans-serif'; margin:0 auto; display:block; height:40px; float:left;width:50%; padding:0 10px; border-radius:3px; font-size:16px; color:#FFF}

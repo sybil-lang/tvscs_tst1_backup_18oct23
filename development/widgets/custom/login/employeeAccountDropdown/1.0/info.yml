@@ -1,0 +1,27 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+attributes:
+  label_login:
+    name: label_login
+    type: ajax
+    description: Label to display for the Log in/Sign up button.
+    default: Log in or Sign up
+    required: false
+  label_menu_accessibility:
+    name: label_menu_accessibility
+    type: string
+    description: Screen-reader label for Display Name dropdown button
+    default: Press enter to open or close the menu. Use up or down arrow keys to navigate
+      if open
+    required: false
+  subpages:
+    name: subpages
+    type: string
+    description: 'Comma-separated list of label > URL pairs that are used to build
+      a sub-menu of page links. Example: Account Overview > /app/account/overview,
+      ...'
+    default: ""
+    required: true

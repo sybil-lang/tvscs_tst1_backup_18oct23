@@ -1,0 +1,100 @@
+<?php /* Originating Release: August 2016 */?>
+<!--<div id="rn_<?=$this->instanceID;?>" class="<?= $this->classList ?>">
+    <rn:block id="top"/>
+    <div id="rn_<?=$this->instanceID;?>_Content">
+        <rn:block id="preErrorMessage"/>
+        <div id="rn_<?=$this->instanceID;?>_ErrorMessage"></div>
+        <rn:block id="postErrorMessage"/>
+        <form id="rn_<?=$this->instanceID;?>_Form" onsubmit="return false;">
+            <rn:block id="preUsername"/>
+            <label for="rn_<?=$this->instanceID;?>_Username"><?=$this->data['attrs']['label_username'];?></label>
+            <input id="rn_<?=$this->instanceID;?>_Username" type="text" maxlength="80" name="Contact.Login" autocorrect="off" autocapitalize="off" value="<?=$this->data['username'];?>"/>
+            <rn:block id="postUsername"/>
+        <? if(!$this->data['attrs']['disable_password']):?>
+            <rn:block id="prePassword"/>
+            <label for="rn_<?=$this->instanceID;?>_Password"><?=$this->data['attrs']['label_password'];?></label>
+            <input id="rn_<?=$this->instanceID;?>_Password" type="password" maxlength="20" name="Contact.Password" <?=($this->data['attrs']['disable_password_autocomplete']) ? 'autocomplete="off"' : '' ?>/>
+            <rn:block id="postPassword"/>
+        <? elseif($this->data['isIE']):?>
+            <label for="rn_<?=$this->instanceID;?>_HiddenInput" class="rn_Hidden">&nbsp;</label>
+            <input id="rn_<?=$this->instanceID;?>_HiddenInput" type="text" class="rn_Hidden" disabled="disabled" />
+        <? endif;?>
+            <br/>
+            <rn:block id="preSubmit"/>
+            <input id="rn_<?=$this->instanceID;?>_Submit" type="submit" value="<?=$this->data['attrs']['label_login_button'];?>"/>
+            <rn:block id="postSubmit"/>
+            <br/>
+        </form>
+    </div>
+    <rn:block id="bottom"/>
+</div>
+<p><strong>#rn:msg:LOG_IN_WITH_AN_EXISTING_ACCOUNT_LBL#</strong></p>-->
+
+<div id="rn_<?=$this->instanceID;?>"   class="<?= $this->classList ?>">
+
+<input type="radio" checked id="signup" name="switch" class="hide">
+<input type="radio"  id="login" name="switch" class="hide">
+
+
+<div >
+
+<ul class="form-header">
+<li><label for="signup"><i class="fa fa-credit-card"></i> OTP</label></li>
+
+<li><label for="login"><i class="fa fa-lock"></i> LOGIN</label></li>
+</ul>
+</div>
+<div class="section-out"  id="rn_<?=$this->instanceID;?>_Content">
+<section class="login-section">
+<div class="login">
+<rn:block id="preErrorMessage"/>
+        <div id="rn_<?=$this->instanceID;?>_ErrorMessage_OTP"></div>
+<rn:block id="postErrorMessage"/>
+<form id="rn_<?=$this->instanceID;?>_Form_otp" onsubmit="return false;">
+<ul class="ul-list">
+<li><label for="rn_<?=$this->instanceID;?>_MobileN"></label><input type="text" required class="input" placeholder="Mobile Number"  id="rn_<?=$this->instanceID;?>_MobileNumber" name="Contact.MobileNumber" maxlength="10" min="10" /><span class="icon"><i class="fa fa-mobile"></i></span></li>
+<!--<li><input type="password" required class="input" placeholder="OTP"/><span class="icon"><i class="fa fa-lock"></i></span></li>
+<li><input type="checkbox" id="check1"> <label for="check1">I accept terms and conditions</label></li>-->
+<li>
+	 <rn:block id="preSubmit"/>
+	<input id="rn_<?=$this->instanceID;?>_Submit_OTP" type="submit" value="<?=$this->data['attrs']['label_loginOTP_button'];?>" class="btn"/>
+            <rn:block id="postSubmit"/></li>
+</ul>
+</form>
+</div>
+
+<!--<div class="social-login">Or sign up with &nbsp;
+<a href="" class="fb"><i class="fa fa-facebook"></i></a>
+<a href="" class="tw"><i class="fa fa-twitter"></i></a>
+<a href="" class="gp"><i class="fa fa-google-plus"></i></a>
+<a href="" class="in"><i class="fa fa-linkedin"></i></a>
+</div>-->
+</section>
+<section class="signup-section">
+<div class="login">
+<rn:block id="preErrorMessage"/>
+	<div id="rn_<?=$this->instanceID;?>_ErrorMessage"></div>
+<rn:block id="postErrorMessage"/>
+<form id="rn_<?=$this->instanceID;?>_Form" onsubmit="return false;">
+<input type="hidden" name="redirect" value="/customer/dashboard/" />
+<ul class="ul-list">
+<li><label for="rn_<?=$this->instanceID;?>_Username"></label><input type="text" maxlength="10" min="10"  required class="input" placeholder="Mobile Number" id="rn_<?=$this->instanceID;?>_Mobile"  name="Contact.Mobile"/><span class="icon"><i class="fa fa-mobile"></i></span></li>
+<li><input type="password" required class="input" placeholder="OTP" id="rn_<?=$this->instanceID;?>_Otp" name="Contact.otp" /><span class="icon"><i class="fa fa-lock"></i></span></li>
+<!--<li><span class="remember"><input type="checkbox" id="check"> <label for="check">Remember Me</label></span><span class="remember"><a href="">Forgot Password</a></span></li>-->
+<li> <rn:block id="preSubmit"/>
+            <input id="rn_<?=$this->instanceID;?>_Submit" type="submit" value="<?=$this->data['attrs']['label_login_button'];?>" class="btn"/>
+            <rn:block id="postSubmit"/></li>
+</ul>
+</form>
+</div>
+
+<!--<div class="social-login">Or sign in with &nbsp;
+<a href="" class="fb"><i class="fa fa-facebook"></i></a>
+<a href="" class="tw"><i class="fa fa-twitter"></i></a>
+<a href="" class="gp"><i class="fa fa-google-plus"></i></a>
+<a href="" class="in"><i class="fa fa-linkedin"></i></a>
+</div>-->
+</section>
+
+
+</div>

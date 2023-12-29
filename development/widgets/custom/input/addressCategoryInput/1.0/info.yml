@@ -1,0 +1,18 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+attributes:
+  hint_separator:
+    name: hint_separator
+    type: string
+    description: The character or string used to separate the label_input text from
+      the hint text. Set to empty string to remove the separator.
+    default: '-'
+    required: false
+extends:
+  widget: custom/input/askCategoryInput
+  components:
+  - css
+  overrideViewAndLogic: "true"

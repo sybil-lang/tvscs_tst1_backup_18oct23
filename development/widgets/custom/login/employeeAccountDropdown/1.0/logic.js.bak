@@ -1,0 +1,42 @@
+RightNow.namespace('Custom.Widgets.login.employeeAccountDropdown');
+Custom.Widgets.login.employeeAccountDropdown = RightNow.Widgets.extend({ 
+    /**
+     * Widget constructor.
+     */
+    constructor: function() {
+
+    },
+
+    /**
+     * Sample widget method.
+     */
+    methodName: function() {
+
+    },
+
+    /**
+     * Makes an AJAX request for `label_login`.
+     */
+    getLabel_login: function() {
+        // Make AJAX request:
+        var eventObj = new RightNow.Event.EventObject(this, {data:{
+            w_id: this.data.info.w_id,
+            // Parameters to send
+        }});
+        RightNow.Ajax.makeRequest(this.data.attrs.label_login, eventObj.data, {
+            successHandler: this.label_loginCallback,
+            scope:          this,
+            data:           eventObj,
+            json:           true
+        });
+    },
+
+    /**
+     * Handles the AJAX response for `label_login`.
+     * @param {object} response JSON-parsed response from the server
+     * @param {object} originalEventObj `eventObj` from #getLabel_login
+     */
+    label_loginCallback: function(response, originalEventObj) {
+        // Handle response
+    }
+});

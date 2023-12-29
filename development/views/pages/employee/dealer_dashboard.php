@@ -1,0 +1,902 @@
+<?php
+//header("location:/app/employee/dashboard");
+//exit;
+?>
+<rn:meta title="#rn:msg:SHP_TITLE_HDG#" template="employee_header.php" clickstream="dashboard" login_required="true" force_https="true" />
+<?php
+//checkLoggedIn('dealer'); //check Logged-in or not
+$CI=&get_instance();
+//$bundle=$CI->session->getSessionData("previouslySeenEmail");
+$contact_id=$CI->session->getProfileData("c_id");
+
+$employee_code=$CI->session->getProfileData("login");
+$fname=$CI->session->getProfileData("first_name");
+
+$lname=$CI->session->getProfileData("last_name");
+
+$name = ucfirst($fname)." ".ucfirst($lname);
+
+$CI->load->helper('report');
+
+checkCustomerType('internal employee');
+
+$msg=\RightNow\Connect\v1_3\MessageBase::fetch(CUSTOM_MSG_Contact_Incident_UserStatus);
+$report_id= $msg->Value;
+$filter = array("Date Created" => date('d/m/Y'));
+//$report_result=report_result($report_id,$filter);
+//print_r($report_result);
+
+
+
+//print_r($report_results);
+$userProfile = $CI->session->getSessionData('userProfile');
+
+$dealer_code = $userProfile['dealer_codes'];
+$dealer_name = $userProfile['dealer_names'];
+$dealer_ID = $userProfile['employee_d_id'];
+
+//$dealer_code = 7090;
+//print_r($report_results);
+?>
+<?php
+		if(!empty($dealer_code)){
+		?>
+<!-- Zozo Tabs css -->
+    <link href="/euf/assets/themes/standard/css/zozo.tabs.min.css" rel="stylesheet" />
+	        <link href="/euf/assets/themes/standard/css/font-awesome-home.css" rel="stylesheet" />                
+     <!-- Zozo Tabs Flat Themes css -->
+    <link href="/euf/assets/themes/standard/css/zozo.tabs.flat.min.css" rel="stylesheet" />
+    
+    <!-- Zozo Tabs js -->
+    <script src="/euf/assets/themes/standard/js/zozo.tabs.min.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<!-- <link rel="stylesheet" type="text/css" href="/euf/assets/themes/standard/css/bootstrap-theme.min.css">  --> 
+<link rel="stylesheet" type="text/css" href="/euf/assets/themes/standard/css/bootstrap-datetimepicker.css">
+<link rel="stylesheet" type="text/css" href="/euf/assets/themes/standard/css/main.css">
+
+<style type="text/css">
+.small-box .icon{
+top:-13px;
+}
+</style>
+
+
+
+<script type="text/javascript" src="/euf/assets/themes/standard/js/moment-with-locales.js"></script>
+
+<script type="text/javascript" src="/euf/assets/themes/standard/js/bootstrap-datetimepicker.js"></script>
+
+        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 hidden" id="loader">
+           <center>
+              <img src="/euf/assets/themes/standard/img/ajax-loader.gif">
+            </center>
+        </div>
+     
+		
+		
+<script type="text/javascript" src="/euf/assets/themes/standard/js/edealer_dashboard.js" ></script>
+
+<script type="text/javascript">
+    var taincident;
+	var tarequest;
+var dealer_ID = '<?php echo $dealer_ID;?>';
+/*
+type: 'pie',
+            name: 'Browser share',
+            data: [
+                ['Firefox', 45.0],
+                ['IE', 26.8],
+                {
+                    name: 'Chrome',
+                    y: 12.8,
+                    sliced: true,
+                    selected: true
+                },
+                ['Safari', 8.5],
+                ['Opera', 6.2],
+                ['Others', 0.7]
+            ]
+			*/
+//$(function () {
+    //Highcharts.chart('ta_incident', {
+  taincident  = {
+	  chart: {
+            type: 'pie',
+			renderTo: 'ta_incident',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'Incidents '
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> <br />VALUE :<b> {point.y}</b>'
+        },
+		credits: {
+			enabled: false
+		},
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{}]
+    };
+
+//Highcharts.chart('ta_request', {
+  tarequest = {
+		chart: {
+            type: 'pie',
+			renderTo: 'ta_request',
+            options3d: {
+                enabled: true,
+                alpha: 45,
+                beta: 0
+            }
+        },
+        title: {
+            text: 'TA Requests '
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br />VALUE :<b> {point.y}</b>'
+        },
+		credits: {
+                enabled: false
+         },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                depth: 35,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }
+        },
+        series: [{}]
+   // });
+};
+//});
+  </script>
+<script type="text/javascript">
+    
+    function microtime(get_as_float) {
+       var now = new Date().getTime() ;
+       var s = parseInt(now) ;
+   
+       return now ;
+    }
+    
+    function getGraph(datafile,methodName,dealerCode) {
+		var sdate = $("[id$=hfyear1]").val();
+		var edate = $("[id$=hfyear2]").val();
+		//alert(sdate);
+		//alert(edate);
+		//var dealerCode = '<?php echo $dealer_code;?>';
+		$("#loader").removeClass("hidden");   
+		if(datafile == 'graph1'){
+				 var param = {
+						'startDate' : sdate,
+						'endDate': edate,
+						'dealerCode': dealerCode
+					};
+					$.ajax({
+						url: '/cc/DealerCustom/getSalesDisbursedCount',
+						data: param,
+						method: 'post',
+						dataType: 'json',
+						beforeSend: function() {
+								$("#loader").removeClass("hidden");   
+						},
+						success: function(response) {
+							
+							//options_line.series[1] = response[1];
+							console.log( response[0]);
+							baroption.series[0] = response[0];
+							//baroption.series[1] = response[1];
+							//console.log(options_line);
+							//var chart1 = new Highcharts.Chart(options_line);
+							var chart1 = new Highcharts.Chart(baroption);
+							//alert(response[0].total);
+							$('#total_disbursal').text(response[0].total);
+							$("#loader").addClass("hidden");   
+						},
+						cache: false
+					});
+	}
+	if(datafile == 'graph4'){
+			var param = {
+						'startDate' : sdate,
+						'endDate': edate,
+						'dealerCode': dealerCode
+					};
+		$.ajax({
+			url: '/cc/DealerCustom/getSalesPerformanceSummary',
+			data: param,
+			method: 'post',
+			dataType: 'json',
+			beforeSend: function() {
+					$("#loader").removeClass("hidden");   
+			},
+			success: function(response) {
+				//console.log(response);
+				//alert(response[0].id);
+				//console.log(response[0].data);
+			optionspdd_line.series[0] = response[0];
+			optionspdd_line.series[1] = response[1];
+			//optionspdd_line.series[2] = response[2];
+			//	baroption.series[0] = response[0];
+			//	baroption.series[1] = response[1];
+				//console.log(options_line);
+				var chart6 = new Highcharts.Chart(optionspdd_line);
+		//		var chart = new Highcharts.Chart(baroption);
+			
+				
+				$("#loader").addClass("hidden");   
+			},
+			cache: false
+		});
+	}
+	if(datafile == 'graph2'){
+		//dealerCode =  '<?php echo $dealer_code;?>';
+		var param = {
+				'startDate': sdate,
+				'endDate': edate,
+				'dealerCode':dealerCode
+			}
+			$.ajax({
+					url: '/cc/DealerCustom/getSalesPerformanceChartSummary',
+					data: param,
+					method: 'post',
+					dataType: 'json',
+					beforeSend: function() {
+						//	$("#loader").removeClass("hidden");   
+					},
+					success: function(response) {
+						//console.log(response);
+						//alert(response[0].id);
+						//console.log(response[0].data);
+						//alert(response[0].data);
+						if(response[0].data == null){
+							
+							//bootbox.alert('<div class="alert alert-warning"><strong>No Data Found.</div>');
+						}else{
+							optionsdpdd_pie.series[0]= response[0];
+						}
+
+						if(response[1].data == null){
+								
+//							bootbox.alert('<div class="alert alert-warning"><strong>No Data Found.</div>');
+						}else{
+							optionsdpdd_bar.series[0] = response[1];
+						}
+						var chart2 = new Highcharts.Chart(optionsdpdd_pie);
+						var chart3 = new Highcharts.Chart(optionsdpdd_bar);
+						
+						//alert(response[0].total);
+						$('#total_pending').text(response[0].total);
+						//$("#loader").addClass("hidden");   
+					},
+					cache: false
+				});
+
+	}
+
+	//PDD
+	if(datafile == 'graph3'){
+		//	dealerCode =  '<?php echo $dealer_code;?>';
+			var param = {
+				'startDate': sdate,
+				'endDate': edate,
+				'dealerCode':dealerCode
+			}
+			$.ajax({
+					url: '/cc/DealerCustom/getPDDAgeingChartSummary',
+					data: param,
+					method: 'post',
+					dataType: 'json',
+					beforeSend: function() {
+							$("#loader").removeClass("hidden");   
+					},
+					success: function(response) {
+						console.log(response);
+						//alert(response[0].id);
+						//console.log(response[0].data);
+						//alert(response[0].data);
+						if(response[0].data == null){
+							/*optionspdd_pie.series[0].id = response[0].id;
+							optionspdd_pie.series[0].colorByPoint = true;
+							//optionspdd_pie.series[0].id = response[0].id;
+							optionspdd_pie.series[0].data = '[{"name":"Invoice with Ageing","y":0,"count":0},{"name":"Insurance with Ageing","y":0,"count":0},{"name":"RC Book with Ageing","y":0,"count":0}]';*/
+							//bootbox.alert('<div class="alert alert-warning"><strong>No Data Found.</div>');
+							optionspdd_pie.series[0]= response[0];
+						}else{
+							optionspdd_pie.series[0]= response[0];
+						}
+
+						if(response[1].data == null){
+								/*optionspdd_bar.series[0].id = response[0].id;
+								optionspdd_bar.series[0].color = response[0].color;
+							//optionspdd_pie.series[0].id = response[0].id;
+								optionspdd_bar.series[0].data = '[{"name":"Invoice with Ageing","y":0,"count":0},{"name":"Insurance with Ageing","y":0,"count":0},{"name":"RC Book with Ageing","y":0,"count":0}]';*/
+//							bootbox.alert('<div class="alert alert-warning"><strong>No Data Found.</div>');
+							optionspdd_bar.series[0] = response[1];
+						}else{
+							optionspdd_bar.series[0] = response[1];
+						}
+						var chart4 = new Highcharts.Chart(optionspdd_pie);
+						var chart5 = new Highcharts.Chart(optionspdd_bar);
+						$('#total_pdd').text(response[0].total);
+						$("#loader").addClass("hidden");   
+					},
+					cache: false
+				});
+
+	}
+	
+	if(datafile == 'graph5'){
+			var param = {
+				'startDate': sdate,
+				'endDate': edate,
+				'dealerCode':dealer_ID
+			}
+				$.ajax({
+					url: '/cc/EmployeeCustom/getDealerIncidentPieData',
+					data: param,
+					method: 'post',
+					dataType: 'json',
+					beforeSend: function() {
+							$("#loader").removeClass("hidden");   
+					},
+					success: function(response) {
+						console.log(response);
+						
+						if(response == null){
+							
+							taincident.series[0]= response;
+						}else{
+							taincident.series[0]= response;
+						}
+						$("#loader").addClass("hidden"); 
+						
+						var chart_5 = new Highcharts.Chart(taincident);
+						
+					},
+					cache: false
+				});
+	}
+
+	if(datafile == 'graph6'){
+			var param = {
+				'startDate': sdate,
+				'endDate': edate,
+				'dealerCode':dealerCode
+			}
+				$.ajax({
+					url: '/cc/EmployeeCustom/getTADealerIncidentPieData',
+					data: param,
+					method: 'post',
+					dataType: 'json',
+					beforeSend: function() {
+						//	$("#loader").removeClass("hidden");   
+					},
+					success: function(response) {
+						console.log(response);
+						
+						if(response == null){
+							
+							tarequest.series[0]= response;
+						}else{
+							tarequest.series[0]= response;
+						}
+
+						
+						var chart_6 = new Highcharts.Chart(tarequest);
+						
+					},
+					cache: false
+				});
+	}
+  }  
+       
+   // $(function () {
+        var chart_11, chart_12, chart_13, chart_14, chart_15, chart_16,chart_7;
+       // $(document).ready(function() {
+
+			function updateChartData(){
+					chart_11 = getGraph('graph1','getSalesDisbursedCount','<?php echo $dealer_code;?>');
+					//chart_12 = getGraph('graph2','getSalesPerformanceChartSummary','<?php echo $dealer_code;?>');
+					//chart_13 = getGraph('graph3','getPDDAgeingChartSummary','<?php echo $dealer_code;?>');
+					//chart_14 = getGraph('graph4','getSalesPerformanceSummary','<?php echo $dealer_code;?>');
+					//chart_15 = getGraph('graph5','getPieData','<?php echo $dealer_code;?>');
+					//chart_16 = getGraph('graph6','getTAPieData','<?php echo $dealer_code;?>');
+			}
+        
+		function setDashboardGraph(graph_id){
+			finalgraph = graph_id;
+			if(graph_id == "sales_1"){
+				 chart_1 = getGraph('graph1','getSalesDisbursedCount','<?php echo $dealer_code;?>');
+				 $('#sales_1').show();
+				 $('#sales_2').hide();
+				 $('#sales_3').hide();
+				 $('#sales_4').hide();
+				 $('#sales_5').hide();
+			}else if(graph_id == "sales_2"){
+				 chart_2 = getGraph('graph2','getSalesPerformanceChartSummary','<?php echo $dealer_code;?>');
+				 chart_4 = getGraph('graph4','getSalesPerformanceSummary','<?php echo $dealer_code;?>');
+				 $('#sales_1').hide();
+				 $('#sales_2').show();
+				 $('#sales_3').show();
+				 $('#sales_4').hide();
+				 $('#sales_5').hide();
+			}else if(graph_id == "sales_4"){
+				 chart_3 = getGraph('graph3','getPDDAgeingChartSummary','<?php echo $dealer_code;?>');
+				 $('#sales_1').hide();
+				 $('#sales_2').hide();
+				 $('#sales_3').hide(); 
+				 $('#sales_4').show();
+				 $('#sales_5').hide();
+			}else if(graph_id == "sales_5"){
+				 chart_5 = getGraph('graph5','getPieData','<?php echo $dealer_code;?>');
+				 chart_6 = getGraph('graph6','getTAPieData','<?php echo $dealer_code;?>');
+				 $('#sales_1').hide();
+				 $('#sales_2').hide();
+				 $('#sales_3').hide();
+				 $('#sales_4').hide();
+				 $('#sales_5').show();
+			}
+	}
+		</script>
+		
+
+<input type="hidden" name="hfFirstYear" id="hfFirstYear" value="<?php echo date("Y");?>" />
+<input type="hidden" name="hfSecondYear" id="hfSecondYear" value="<?php echo date("Y")+1;?>" />
+<input type="hidden" name="hfyear1" id="hfyear1" value="<?php echo date('d/m/Y', mktime(0,0,0,date("m")-3,date("d"),date("Y")));?>" />
+<input type="hidden" name="hfyear2" id="hfyear2" value="<?php echo date('d/m/Y');?>" />
+<br />		
+<section class="dealercontainer">
+
+<div class="col-sm-12">
+
+	<div class="col-sm1-3 col-xs-3 col-lg-2 ">
+						 
+		<div class="row">
+		   <div class="col-sm-12 col-md-12 col-lg-5">
+			  <img src="/euf/assets/themes/standard/img/photo.png" alt="<?php echo $dealer_name;?>"  style="border-radius:50px">
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-7" style="margin-top:5px">
+			  <div class="small"><?php echo $dealer_code;?></div>
+			  <div class="text-uppercase"><?php echo $dealer_name;?> </div>
+			</div>
+		</div>
+	  <br>
+	</div>
+
+	<div class="col-sm-9" id="nav">
+		<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+		  <span class="small text-uppercase text-muted"></span>
+		  <h1>Dashboard</h1>
+
+		</div>
+		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-8">
+		  <div class="row">
+			<div class='col-sm-12 form-inline datetimepickerwrapper'>
+			  <div class="form-group">
+				<label>From</label>
+				<div class='input-group date' id='datetimepicker6'>
+
+				  <input type='text' class="form-control" value="<?php echo date("d/m/Y",mktime(0,0,0,date("m")-3,date("d"),date("Y")));?>" data-provide="datepicker"  />
+				  <span class="input-group-addon click6">
+								<span class="glyphicon glyphicon-calendar"></span>
+				  </span>
+				</div>
+			  </div>
+
+			  <div class="form-group">
+				<label>To</label>
+				<div class='input-group date' id='datetimepicker7'>
+
+				  <input type='text' class="form-control" value="<?php echo date("d/m/Y");?>" />
+				  <span class="input-group-addon click7">
+								<span class="glyphicon glyphicon-calendar"></span>
+				  </span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		</div>
+	  </div>
+	  </div>
+</div><!-- End  -->
+
+
+<div class="row affix-row">
+    <div class="col-sm1-3 col-xs-3 affix-sidebar">
+		<div class="sidebar-nav">
+  <div class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <span class="visible-xs navbar-brand">Sidebar menu</span>
+    </div>
+    <div class="navbar-collapse collapse sidebar-navbar-collapse">
+      <ul class="nav navbar-nav" id="sidenav01">
+        <li class="active">
+          <a href="javascript:void(0);" data-toggle="collapse" data-target="#toggleDemo0" data-parent="#sidenav01" class="collapsed">
+          <h4>
+          Control Panel
+          </h4>
+          </a>
+        </li>
+        <li >
+          <a href="#" data-toggle="collapse" data-target="#toggleDemo" data-parent="#sidenav01" class="collapsed">
+          <span class="glyphicon glyphicon-cloud"></span> Dashboard <span class="caret pull-right"></span>
+          </a>
+          <div class="collapse" id="toggleDemo" style="height: 0px;">
+            <ul class="nav nav-list">
+              <li> <a href="javascript:void(0);" onclick="setDashboardGraph('sales_1');">Dealer Disbursal</a> </li>
+			  <li><a href="javascript:void(0);" onclick="setDashboardGraph('sales_2');">Sales Performance</a></li>
+			  <li><a href="javascript:void(0);" onclick="setDashboardGraph('sales_4');">PDD Pending</a></li>
+			  <li><a href="javascript:void(0);" onclick="setDashboardGraph('sales_5');">Trade Advance</a></li>
+            </ul>
+          </div>
+        </li>
+		<li><a href="<?php echo $site_url;?>/app/employee/business-information"><span class="glyphicon glyphicon-lock"></span> Business Information</a></li>
+        <li><a href="<?php echo $site_url;?>/app/employee/dealer_disbursal_detail"><span class="glyphicon glyphicon-calendar"></span> Sales Performance <!--<span class="badge pull-right">42</span>--></a></li>
+        <li >
+          <a href="javascript:void(0);" data-toggle="collapse" data-target="#toggleDemo2" data-parent="#sidenav01" class="collapsed">
+          <span class="glyphicon glyphicon-inbox"></span> Trade Advance <span class="caret pull-right"></span>
+          </a>
+          <div class="collapse" id="toggleDemo2" style="height: 0px;">
+            <ul class="nav nav-list">
+				<li><a href="<?php echo $site_url;?>/app/employee/trade-request">TA Request</a></li>
+				<li><a href="<?php echo $site_url;?>/app/employee/trade_summary">TA Summary</a></li>
+				<li><a href="<?php echo $site_url;?>/app/employee/trade_transaction">TA Transactions</a></li>
+            </ul>
+          </div>
+        </li>
+
+		<li >
+          <a href="javascript:void(0);" data-toggle="collapse" data-target="#toggleDemo3" data-parent="#sidenav01" class="collapsed">
+          <span class="glyphicon glyphicon-inbox"></span> Incentives & Claims<span class="caret pull-right"></span>
+          </a>
+          <div class="collapse" id="toggleDemo3" style="height: 0px;">
+            <ul class="nav nav-list">
+				<li><a href="<?php echo $site_url;?>/app/employee/incentive_view">I & C Summary</a></li>
+                <li><a href="<?php echo $site_url;?>/app/employee/transaction_view">I & C Transactions</a></li>
+            </ul>
+          </div>
+        </li>
+         
+      </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+	<p>&nbsp;</p>
+	<div>
+		<ul><li style="margin-top:10px;"><a href="<?php echo $site_url;?>/app/employee/dealerquery"><img src="<?php echo $site_url;?>/euf/assets/themes/standard/images/for-dealer-img.gif"></a></li></ul>
+	</div>
+  </div>
+	</div>
+	
+	<!-- Main -->
+	<div class="column col-sm-9 col-xs-11 affix-content">
+	  <div class="container-fluid">
+		
+		  <div class="row content">
+			
+			<br>
+
+			<div class="col-sm-12 col-md-12 col-lg-12" id="contemt-main">
+			  <div class="row">
+				<div class="col-sm-6 col-md-6 col-lg-3">
+				  <div class="well">
+					<div class="row">
+					  <div class="col-md-12 col-lg-12">
+						
+							<div class="small-box ">
+								<div class="inners">
+								  <h3><span id="total_disbursal">0</span></h3>
+								  <p>Total Dealer Disbursal</p>
+								</div>
+								<div class="icon">
+								  <i class="fa fa-lightbulb-o"></i>
+
+								</div>
+								<a href="<?php echo $site_url;?>/app/employee/business-information" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+					  </div>
+					 
+					</div>
+				  </div>
+
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3">
+				  <div class="well">
+					<div class="row">
+					  <div class="col-md-12 col-lg-12">
+
+					   
+							<div class="small-box ">
+								<div class="inners">
+								  <h3><span id="total_pending">0</span></h3>
+								  <p>Total Disbursal Pending</p>
+								</div>
+								<div class="icon">
+								  <i class="fa fa-money"></i>
+
+								</div>
+								<a href="<?php echo $site_url;?>/app/employee/business-information" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+					  </div>
+
+					  <!--<div class="col-md-12 col-lg-6">
+						<span id="page-views-chart-container">Data will render here</span>
+					  </div>-->
+					</div>
+
+				  </div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3">
+				  <div class="well ">
+					<div class="row">
+					  <div class="col-md-12 col-lg-12">
+						
+						<div class="small-box ">
+								<div class="inners">
+								  <h3><span id="total_pdd">0</span></h3>
+								  <p>Total PDD Pending</p>
+								</div>
+								<div class="icon">
+								  <i class="fa fa-inr"></i>
+
+								</div>
+								<a href="<?php echo $site_url;?>/app/employee/business-information" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+					  </div>
+
+					  <!--<div class="col-md-12 col-lg-6">
+						<span id="session-duration-chart-container">Data will render here</span>
+					  </div>-->
+					</div>
+				  </div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3">
+				  <div class="well">
+					<div class="row">
+					  <div class="col-md-12 col-lg-12">
+
+							<div class="small-box ">
+								<div class="inners">
+								  <h3><span id="total_ta">0</span></h3>
+								  <p>Total TA Request</p>
+								</div>
+								<div class="icon">
+								  <i class="fa fa-calendar-check-o"></i>
+
+								</div>
+								<a href="<?php echo $site_url;?>/app/employee/trade-request" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+							</div>
+					  </div>
+
+					<!--  <div class="col-md-12 col-lg-6">
+						<span id="bounce-rate-chart-container">Data will render here</span>
+					  </div>-->
+					</div>
+
+				  </div>
+				</div>
+			  </div>
+			  <div class="row" id="sales_1">
+				<div class="col-sm-12">
+				  <div class="well"  id="Sales_Disbursed">
+					<h4>Sales Disbursed Details</h4>
+					 <div id="container"></div>
+				  </div>
+				</div>
+			  </div>
+
+			   <div class="row" id="sales_2" style="display:none;">
+				<div class="col-sm-12">
+				  <div class="well"  id="Sales_Performance" >
+					<h4>Sales Performance Details</h4>
+					 <div id="disbursalcontainer"></div>
+				  </div>
+				</div>
+			  </div>
+
+			  <div class="row"  id="sales_3" style="display:none;">
+				<div class="col-sm-6">
+				  <div class="well" >
+					<!--<h4 >Sales Performance Details</h4>-->
+				   <div id="disbursalbarchart1" ></div>  
+				  </div>
+				</div>
+				<div class="col-sm-6" >
+				  <div class="well">
+				  <!--  <h4>Summary Details for PDD Pending</h4>-->
+					<div id="disbursalpiechart1"></div> 
+				  </div>
+				</div>
+			  </div>
+			  <div class="row" id="sales_4"  style="display:none;">
+					<div class="col-sm-6">
+						<div class="well" id="PDD_Pending">
+							<!--<h4>Summary Details for PDD Pending</h4>-->
+							 <div id="pddbarchart1"></div> 
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="well">
+							<div id="pddpiechart1"></div>
+						</div>
+					</div>
+			  </div>
+			  <div class="row" id="sales_5" style="display:none;">
+					<div class="col-sm-6">
+					  <div class="well">
+						<!--<h4 >Trade Advance</h4>-->
+						<div id="ta_request"></div> 
+					  </div>
+					</div>
+					<div class="col-sm-6">
+					  <div class="well">
+						<!--<h4>Incidents</h4>-->
+					   <div id="ta_incident"></div> 
+					  </div>
+					</div>
+				</div>
+			  
+			</div>
+		  </div>
+		</div>
+	</div>
+	<!-- /main -->
+	
+</div>
+
+
+</section>
+		<script type="text/javascript">
+			updateChartData();
+		</script>
+		
+<?php }else{ ?>
+
+
+
+<section class="clearfix">
+	 <div class="main">
+					<form method="post" action="/app/employee/dealer_dashboard" name="dform" id="dform">
+						
+							<!-- Modal -->
+							<div id="myModal" class="modal fade" role="dialog">
+								<div id="bootbox-body"></div>
+							  <div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+								  <div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">Select Dealer</h4>
+								  </div>
+								  <div class="modal-body">
+													
+										<!--<div id="magicsuggest"></div>-->
+										<input type="text" name="dealer_number" id="dealer_number" />
+								  </div>
+								  <div class="modal-footer">
+									<div id="errorimg_2"></div>
+									<input type="hidden" id="dealer_code" name="dealer_code" value="" />
+									<input type="hidden" id="dealer_name" name="dealer_name" value="" />
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-default" id="btn_save">Ok</button>
+								  </div>
+								</div>
+
+							  </div>
+							</div>
+					</form>
+	  </div>
+</section>
+
+
+<script type="text/javascript">
+$("#myModal").modal('show');
+$("#btn_save").on("click", function(){
+			jQuery.ajax({
+						type: 'POST',
+						data: {
+							'dealer_codes' : $('#dealer_code').val()
+						},
+						url: '/cc/EmployeeCustom/setDealerCode',
+						beforeSend: function() {
+							// setting a timeout
+							$('#bootbox-body').html('<p><i class="fa fa-spin fa-spinner"></i> Loading...</p>');
+							//$(placeholder).addClass('loading');
+						},
+						success: function(response) {
+							//alert(response);
+								$('#bootbox-body').html('');
+								window.location.reload();
+						}
+					});
+});
+
+</script>
+ <?php } ?>
+<script type="text/javascript">
+var text3 = $("#dealer_number").tautocomplete({
+                   // width: "700px",
+                    columns: ['Value', 'Name'],
+					placeholder: "Search Dealer Name",
+				//	regex: "/^[a-zA-Z0-9]{3,}$/",
+                    ajax: {
+                        url: "/cc/EmployeeCustom/getDealerLists",
+                        type: "GET",
+                        data: function(){var x = { query: text3.searchdata()}; return x;},
+                        success: function (result) {
+                            
+                            var filterData = [];
+
+                            var searchData = eval("/" + text3.searchdata() + "/gi");
+
+                            $.each(result, function (i, v) {
+                                if (v.name.search(new RegExp(searchData)) != -1) {
+                                    filterData.push(v);
+                                }
+                            });
+                            return filterData;
+                        }
+                    },
+                    onchange: function () {
+                       // $("#ta-txt").html(text2.text());
+					    $('#dealer_code').val(text3.id());
+                    }
+                });
+/*var ms = $('#magicsuggest').magicSuggest({
+       data:  '/cc/EmployeeCustom/getDealerLists',
+		maxSelection: 1,
+		minChars: 5,
+		maxSuggestions: 50,
+        renderer: function(data){
+		  
+            return '<div style="padding: 5px; overflow:hidden;">' +
+                '<div style="float: left;"><i class="fa fa-address-card" aria-hidden="true"></i></div>' +
+                '<div style="float: left; margin-left: 5px">' +
+                    '<div style="font-weight: bold; color: #333; font-size: 13px; line-height: 11px">' + data.value + '</div>' +
+                    '<div style="color: #999; font-size: 13px;">' + data.name + '</div>' +
+                '</div>' +
+            '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
+
+        }
+    });
+	$(ms).on('selectionchange', function(e,m){
+			$('#errorimg_2').html('');
+		  $('#dealer_code').val(this.getValue());
+		});
+	$(ms).on('beforeload', function(){
+		 // add your gif loader here
+		 $('#errorimg_2').html("<img src='images/loading.gif' alt='loading' />").fadeIn();  
+	});
+//});*/
+</script>

@@ -1,0 +1,32 @@
+<html>
+<head>
+
+<?php
+$CI=&get_instance();
+$CI->load->helper('report');
+
+checkCustomerType('customer');
+
+$contact_id=$CI->session->getProfileData("c_id");
+
+$msg=RightNow\Connect\v1_3\MessageBase::fetch(CUSTOM_MSG_Contact_Loan_Eligible);
+$report_id=$msg->Value;
+
+$filter=array('Contact Id'=>$contact_id);
+//$filter=array();
+$report_result=report_result($report_id,$filter);
+//print_r($report_result);
+?>
+</head>
+<body>
+<div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+<?php
+if(!empty($report_result)){?>
+		<a href="http://www.tvscredit.co.in/CARCAMPAIGNS1/e-used-car-loan.aspx" target="_blank"><img src="/euf/assets/themes/standard/images/tvs_credit_festival_offer.png"/></a>
+<?php }else{?>
+	<p>No Record Found</p>
+
+<?php } ?>
+</div>
+</body>
+</html>

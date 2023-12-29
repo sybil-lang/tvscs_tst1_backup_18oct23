@@ -1,0 +1,21 @@
+version: "1.0"
+requires:
+  jsModule:
+  - standard
+  - mobile
+attributes:
+  redirect_url:
+    name: redirect_url
+    type: string
+    description: Page to which to redirect after log-out. This attribute does not
+      have any affect if the user logs in using PTA. Instead they will be redirected
+      to the value of the PTA_EXTERNAL_LOGOUT_SCRIPT_URL config. Default is the value
+      of the CP_HOME_URL config setting.
+    default: /app/employee/login
+    required: false
+extends:
+  widget: standard/login/LogoutLink
+  components:
+  - php
+  - css
+  overrideViewAndLogic: "true"

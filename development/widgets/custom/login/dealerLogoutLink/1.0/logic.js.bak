@@ -1,0 +1,42 @@
+RightNow.namespace('Custom.Widgets.login.dealerLogoutLink');
+Custom.Widgets.login.dealerLogoutLink = RightNow.Widgets.extend({ 
+    /**
+     * Widget constructor.
+     */
+    constructor: function() {
+
+    },
+
+    /**
+     * Sample widget method.
+     */
+    methodName: function() {
+
+    },
+
+    /**
+     * Makes an AJAX request for `logout_ajax`.
+     */
+    getLogout_ajax: function() {
+        // Make AJAX request:
+        var eventObj = new RightNow.Event.EventObject(this, {data:{
+            w_id: this.data.info.w_id,
+            // Parameters to send
+        }});
+        RightNow.Ajax.makeRequest(this.data.attrs.logout_ajax, eventObj.data, {
+            successHandler: this.logout_ajaxCallback,
+            scope:          this,
+            data:           eventObj,
+            json:           true
+        });
+    },
+
+    /**
+     * Handles the AJAX response for `logout_ajax`.
+     * @param {object} response JSON-parsed response from the server
+     * @param {object} originalEventObj `eventObj` from #getLogout_ajax
+     */
+    logout_ajaxCallback: function(response, originalEventObj) {
+        // Handle response
+    }
+});

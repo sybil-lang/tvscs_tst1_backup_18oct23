@@ -1,0 +1,130 @@
+function getMonthsBetween(date1,date2,roundUpFractionalMonths)
+{
+    //Months will be calculated between start and end dates.
+    //Make sure start date is less than end date.
+    //But remember if the difference should be negative.
+    var startDate=date1;
+    var endDate=date2;
+    var inverse=false;
+    if(date1>date2)
+    {
+        //startDate=date2;
+       // endDate=date1;
+        inverse=true;
+		//alert("good");
+	   return -1;
+    }
+
+return moment([endDate.getFullYear(), endDate.getMonth(), endDate.getDate()]).diff(moment([startDate.getFullYear(), startDate.getMonth(), startDate.getDate()]), 'months');
+
+
+};
+
+var ddtable;
+
+	$(function() {
+    //Maximum  date for which the analytic could be done
+		var max_pickup_Date = new Date();
+		var maxDate = new Date(new Date(max_pickup_Date).setMonth(max_pickup_Date.getMonth()-3));
+    
+		$('#datetimepicker'+scounter).datetimepicker({
+		  format:'DD/MM/YYYY',
+		  //maxDate : maxDate,
+		  widgetPositioning: {
+				vertical: 'bottom'
+			}
+
+		});
+    //Setting the defailt date 
+	 //$('#datetimepicker6').data("DateTimePicker").date(new Date(new Date(max_pickup_Date).setMonth(max_pickup_Date.getMonth()-3)));  
+    
+    $('#datetimepicker'+ecounter).datetimepicker({
+      format:'DD/MM/YYYY',
+	  widgetPositioning: {
+				vertical: 'bottom'
+			}
+    });
+    
+    $("#datetimepicker"+scounter+" input").click(function(){
+        $(".click_"+scounter).click();
+    });
+    
+	$("#datetimepicker"+ecounter+" input").click(function(){
+        $(".click_"+ecounter).click();
+    });
+    //Variable initialization
+	var static_date =$("#datetimepicker"+scounter+" input").val();
+	//	alert(static_date);
+	var arr = static_date.split('/');
+    var statice_date = $('#datetimepicker'+ecounter+' input').val();
+	//	alert(statice_date);
+
+	var pick_up_startdate  = new Date(moment(static_date, 'DD/MM/YYYY', true).format());
+	// alert(pick_up_startdate);
+//	console.log(pick_up_startdate);
+	var pick_up_enddate = new Date();
+
+    //Checking for any change in the Date Time Picker input box to manipulate the chart data accordingly  
+    $("#datetimepicker"+scounter).on("dp.change", function(e) {
+      
+		  $('#datetimepicker'+scounter+' input').blur();
+		  
+		  
+		  pick_up_startdate = new Date(e.date);
+
+		 $('#datetimepicker'+scounter).data("DateTimePicker").date(pick_up_startdate);
+		 //$('#datetimepicker6').data("DateTimePicker").date("14/12/2013");
+		 var day = pick_up_startdate.getDate();
+		 var month = pick_up_startdate.getMonth()+1;
+		 var year = pick_up_startdate.getFullYear();
+		 $('#datetimepicker'+scounter+' input').val(day+"/"+month+"/"+year);
+		static_date =	$('#datetimepicker'+scounter+' input').val();
+		 //alert();
+		  var diff_mon = getMonthsBetween(pick_up_startdate,pick_up_enddate, true);
+		  console.log(diff_mon);
+		  if(diff_mon <=3  && diff_mon >= 0){
+			  $("#loader").removeClass("hidden");
+			 var url = "/cc/DealerCustom/reloadSalesRestData?method="+methodName+"&start_date="+static_date+"&end_date="+statice_date+"&dealer_code="+dealerCode;
+			ddtable.ajax.url(url).load();
+			  setTimeout(function(){
+				//seed_data(pick_up_date,one_month_foward);  
+				$("#loader").addClass("hidden");
+			  },5000);
+		  }else{
+					bootbox.alert('<div class="alert alert-warning"><strong>Month Difference can not be greater then Three Months.</div>');
+						
+		  }
+		});
+
+		//Checking for any change in the Date Time Picker input box to manipulate the chart data accordingly  
+    $("#datetimepicker"+ecounter).on("dp.change", function(e) {
+      
+		  $('#datetimepicker'+ecounter+' input').blur();
+		  
+		  
+		  pick_up_enddate = new Date(e.date);
+
+		$('#datetimepicker'+ecounter).data("DateTimePicker").date(pick_up_enddate);
+		 var day = pick_up_enddate.getDate();
+		 var month = pick_up_enddate.getMonth()+1;
+		 var year = pick_up_enddate.getFullYear();
+		 //alert(day+"/"+month+"/"+year);
+		 $('#datetimepicker'+ecounter+' input').val(day+"/"+month+"/"+year);
+		statice_date =	$('#datetimepicker'+ecounter+' input').val();
+		 //alert();
+		  //ddtable.ajax.reload();
+		  var diff_mon = getMonthsBetween(pick_up_startdate,pick_up_enddate, true);
+		  console.log(diff_mon);
+		   if( diff_mon <=3 && diff_mon >= 0){
+			   $("#loader").removeClass("hidden");
+				 var url = "/cc/DealerCustom/reloadSalesRestData?method="+methodName+"&start_date="+static_date+"&end_date="+statice_date+"&dealer_code="+dealerCode;
+				ddtable.ajax.url(url).load();
+				  setTimeout(function(){
+					//seed_data(pick_up_date,one_month_foward);  
+					$("#loader").addClass("hidden");
+				  },5000);
+		   }else{
+					bootbox.alert('<div class="alert alert-warning"><strong>Month Difference can not be greater then Three Months.</div>');
+		   }
+		});
+	});
